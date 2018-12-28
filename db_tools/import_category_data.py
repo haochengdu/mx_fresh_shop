@@ -10,10 +10,12 @@
 import sys
 import os
 
-# 获取当前文件的路径（运行脚本）
+# 获取当前文件的路径（脚本文件的路径）
 print(os.path.realpath(__file__))
+# 当前文件所在的文件夹
 pwd = os.path.dirname(os.path.realpath(__file__))
-# 获取项目的跟目录
+# F:\\PythonCode\\Django\\mx_fresh_shop\\db_tools\\data../
+# 即F:\\PythonCode\\Django\\mx_fresh_shop\\db_tools 添加到系统路径中
 sys.path.append(pwd + "../")
 # 要想单独使用django的model，必须指定一个环境变量，会去settings配置找
 # 参照manage.py里面就知道为什么这样设置了

@@ -47,8 +47,10 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class GoodsSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()  # 外键字段的覆盖
+    # category = CategorySerializer()  # 外键字段的覆盖
+    # category_type = serializers.CharField(source='category.get_category_type_display')
 
     class Meta:
         model = Goods()
         fields = "__all__"
+        depth = 2

@@ -69,13 +69,14 @@ from goods.serializers import GoodsSerializer, CategorySerializer
 #         return HttpResponse(json_list, content_type='application/json')
 
 
-# class GoodsListView(APIView):
-#     """商品列表-使用rest_framework"""
-#
-#     def get(self, request, format=None):
-#         goods = Goods.objects.all()[:5]
-#         goods_serializer = GoodsSerializer(goods, many=True)
-#         return Response(goods_serializer.data)
+class GoodsListView(APIView):
+    """商品列表-使用rest_framework"""
+
+    def get(self, request, *args, **kwargs):
+        goods = Goods.objects.all().filter(category__category_type=1)
+        goods_serializer = GoodsSerializer(goods, many=True)
+        return Response(goods_serializer.data)
+
 
 class GoodsPagination(PageNumberPagination):
     """商品列表自定义分页"""
@@ -105,15 +106,15 @@ class GoodsPagination(PageNumberPagination):
 #     def get(self, request, *args, **kwargs):
 #         return self.list(request, *args, **kwargs)
 
-class GoodsListView(ListAPIView):
-    """
-    上面的代码优化，可以直接继承ListAPIView，ListAPIView主要做了两件事:
-        ListAPIView(mixins.ListModelMixin,GenericAPIView)        继承了这两个类
-        写好了get方法
-    """
-    pagination_class = GoodsPagination
-    queryset = Goods.objects.all()
-    serializer_class = GoodsSerializer
+# class GoodsListView(ListAPIView):
+#     """
+#     上面的代码优化，可以直接继承ListAPIView，ListAPIView主要做了两件事:
+#         ListAPIView(mixins.ListModelMixin,GenericAPIView)        继承了这两个类
+#         写好了get方法
+#     """
+#     pagination_class = GoodsPagination
+#     queryset = Goods.objects.all()
+#     serializer_class = GoodsSerializer
 
 
 # class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):

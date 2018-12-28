@@ -25,11 +25,11 @@ import xadmin
 from goods.views import GoodsListView, GoodsListViewSet, CategoryViewSet
 from mx_fresh_shop.settings import MEDIA_ROOT
 
-router = DefaultRouter()
-# 配置goods的url
-router.register(r'goods', GoodsListViewSet)
-# 配置Category的url
-router.register(r'categorys', CategoryViewSet, base_name="categorys")
+# router = DefaultRouter()
+# # 配置goods的url
+# router.register(r'goods', GoodsListViewSet)
+# # 配置Category的url
+# router.register(r'categorys', CategoryViewSet, base_name="categorys")
 
 urlpatterns = [
     path('xadmin/', xadmin.site.urls),
@@ -39,8 +39,8 @@ urlpatterns = [
     # drf文档，title自定义
     path('docs', include_docs_urls(title='仙剑奇侠传')),
     path('api-auth/', include('rest_framework.urls')),
-    re_path('^', include(router.urls)),
-    # path('goods/', GoodsListView.as_view(), name='goods-list'),  # 商品列表页
+    # re_path('^', include(router.urls)),
+    path('goods/', GoodsListView.as_view(), name='goods-list'),  # 商品列表页
 
     # token
     path('api-token-auth/', views.obtain_auth_token),

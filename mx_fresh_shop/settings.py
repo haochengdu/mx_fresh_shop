@@ -18,7 +18,7 @@ import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# 将extra_apps和apps标记为sources root,然后settings中也要加路径
+# 将extra_apps和apps标记为sources root,然后settings中也要加到系统路径中
 sys.path.insert(0, BASE_DIR)
 sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 sys.path.insert(0, os.path.join(BASE_DIR, 'extra_apps'))
@@ -34,6 +34,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
+# 要想替换系统的用户，还要在settings中配置
 # 重载系统的用户，让UserProfile生效
 AUTH_USER_MODEL = 'users.UserProfile'
 
@@ -46,8 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'crispy_forms',
     'xadmin',
+    'crispy_forms',
     'rest_framework',
     'rest_framework.authtoken',
     'DjangoUeditor',
@@ -64,7 +65,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -94,18 +95,25 @@ WSGI_APPLICATION = 'mx_fresh_shop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'mxshop',  # 数据库名字
+#         'USER': 'root',  # 账号
+#         'PASSWORD': 'mysql',  # 密码
+#         # 'HOST': '127.0.0.1',  # 自己电脑MySQL的IP
+#         'HOST': '127.0.0.1',  # 公司MySQL的IP
+#         'PORT': '3306',  # 端口
+#         # 这里引擎用innodb（默认myisam）
+#         # 因为后面第三方登录时，要求引擎为INNODB
+#         # 'OPTIONS':{'init_command': 'SET storage_engine=INNODB'}, #这样设置会报错，改为
+#         "OPTIONS": {"init_command": "SET default_storage_engine=INNODB;"}
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mxshop',  # 数据库名字
-        'USER': 'root',  # 账号
-        'PASSWORD': 'mysql',  # 密码
-        'HOST': '127.0.0.1',  # IP
-        'PORT': '3306',  # 端口
-        # 这里引擎用innodb（默认myisam）
-        # 因为后面第三方登录时，要求引擎为INNODB
-        # 'OPTIONS':{'init_command': 'SET storage_engine=INNODB'}, #这样设置会报错，改为
-        "OPTIONS": {"init_command": "SET default_storage_engine=INNODB;"}
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
