@@ -47,6 +47,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class GoodsSerializer(serializers.ModelSerializer):
+    # category只显示分类的id，Serialzer还可以嵌套使用，覆盖外键字段，也可以直接使用depth
     # category = CategorySerializer()  # 外键字段的覆盖
     # category_type = serializers.CharField(source='category.get_category_type_display')
 

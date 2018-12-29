@@ -3,8 +3,7 @@ import django_filters
 from django.shortcuts import render
 from django.views import View
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.generics import ListAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -73,7 +72,7 @@ class GoodsListView(APIView):
     """商品列表-使用rest_framework"""
 
     def get(self, request, *args, **kwargs):
-        goods = Goods.objects.all().filter(category__category_type=1)
+        goods = Goods.objects.all().filter()
         goods_serializer = GoodsSerializer(goods, many=True)
         return Response(goods_serializer.data)
 
@@ -135,24 +134,29 @@ class GoodsListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     # 分页
     pagination_class = GoodsPagination
     serializer_class = GoodsSerializer
-    filter_backends = (filters.SearchFilter, filters.OrderingFilter)
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter)
 
-    # 设置filter的类为我们自定义的类
+    # 设置filter的类为我们自定义的类,filter_class需要与DjangoFilterBackend类配合使用
     filter_class = GoodsFilter
     # 搜索,=name表示精确搜索，也可以使用各种正则表达式
-    search_fields = ('name', 'goods_brief', 'good_desc')
+    search_fields = ('name', 'goods_brief')
     # 排序
     ordering_fields = ('sold_num', 'shop_price')
 
 
-class CategoryViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    list:
+    list或object
     商品分类列表数据
-    要想获取某一个商品的详情的时候，继承 mixins.RetrieveModelMixin  就可以了
+    ReadOnlyModelViewSet继承了mixins.RetrieveModelMixin,
+                           mixins.ListModelMixin,
+                           GenericViewSet
+    要想获取某一个商品的详情的时候，继承 mixins.RetrieveModelMixin 和 GenericViewSet  就可以了
     """
-    queryset = GoodsCategory.objects.filter(category_type=1)
+    queryset = GoodsCategory.objects.all()
     serializer_class = CategorySerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ['category_type', ]  # 对category_type进行搜索
 
 
 
