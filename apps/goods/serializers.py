@@ -40,15 +40,17 @@ class CategorySerializer(serializers.ModelSerializer):
     """商品一级类别序列化"""
     # 在parent_category字段中定义的related_name="sub_cat"
     sub_cat = CategorySerializer2(many=True)
-
+    # category_type = serializers.CharField(source='get_category_type_display')
     class Meta:
         model = GoodsCategory
         fields = "__all__"
+        depth = 2
 
 
 class GoodsSerializer(serializers.ModelSerializer):
     # category只显示分类的id，Serialzer还可以嵌套使用，覆盖外键字段，也可以直接使用depth
-    # category = CategorySerializer()  # 外键字段的覆盖
+    category = CategorySerializer()  # 外键字段的覆盖
+    # 这种选择显示只能嵌套一层
     # category_type = serializers.CharField(source='category.get_category_type_display')
 
     class Meta:
