@@ -8,7 +8,7 @@
 """
 from rest_framework import serializers
 
-from goods.models import Goods, GoodsCategory
+from goods.models import Goods, GoodsCategory, GoodsImage
 
 
 # # 用Serializer实现的，需要自己手动添加字段，如果用Modelserializer，会更加的方便，直接用__all__就可以全部序列化
@@ -41,10 +41,18 @@ class CategorySerializer(serializers.ModelSerializer):
     # 在parent_category字段中定义的related_name="sub_cat"
     sub_cat = CategorySerializer2(many=True)
     # category_type = serializers.CharField(source='get_category_type_display')
+
     class Meta:
         model = GoodsCategory
         fields = "__all__"
         depth = 2
+
+
+class GoodsImagesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = GoodsImage
+        fields = ["image", ]
 
 
 class GoodsSerializer(serializers.ModelSerializer):
@@ -52,8 +60,14 @@ class GoodsSerializer(serializers.ModelSerializer):
     category = CategorySerializer()  # 外键字段的覆盖
     # 这种选择显示只能嵌套一层
     # category_type = serializers.CharField(source='category.get_category_type_display')
+    # images是数据库中设置的related_name="images"，把轮播图嵌套进来
+    images = GoodsImagesSerializer(many=True)
 
     class Meta:
         model = Goods()
         fields = "__all__"
         depth = 2
+
+
+
+

@@ -18,7 +18,7 @@ class GoodsFilter(django_filters.rest_framework.FilterSet):
     price_min = django_filters.NumberFilter(field_name="shop_price", lookup_expr='gte')
     price_max = django_filters.NumberFilter(field_name="shop_price", lookup_expr='lte')
     # 根据category来搜索商品
-    top_category = django_filters.NumberFilter(name="category", method='top_category_filter')
+    top_category = django_filters.NumberFilter(field_name="category", method='top_category_filter')
 
     def top_category_filter(self, queryset, name, value):
         # 不管当前点击的是一级分类二级分类还是三级分类，都能找到。
@@ -27,4 +27,4 @@ class GoodsFilter(django_filters.rest_framework.FilterSet):
 
     class Meta:
         model = Goods
-        fields = ['price_min', 'price_max']
+        fields = ['price_min', 'price_max', 'is_hot']
